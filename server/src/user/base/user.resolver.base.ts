@@ -25,6 +25,12 @@ import { DeleteUserArgs } from "./DeleteUserArgs";
 import { UserFindManyArgs } from "./UserFindManyArgs";
 import { UserFindUniqueArgs } from "./UserFindUniqueArgs";
 import { User } from "./User";
+import { FriendRelationshipFindManyArgs } from "../../friendRelationship/base/FriendRelationshipFindManyArgs";
+import { FriendRelationship } from "../../friendRelationship/base/FriendRelationship";
+import { PrivateMessageFindManyArgs } from "../../privateMessage/base/PrivateMessageFindManyArgs";
+import { PrivateMessage } from "../../privateMessage/base/PrivateMessage";
+import { RoomMessageFindManyArgs } from "../../roomMessage/base/RoomMessageFindManyArgs";
+import { RoomMessage } from "../../roomMessage/base/RoomMessage";
 import { UserService } from "../user.service";
 
 @graphql.Resolver(() => User)
@@ -134,5 +140,105 @@ export class UserResolverBase {
       }
       throw error;
     }
+  }
+
+  @common.UseInterceptors(AclFilterResponseInterceptor)
+  @graphql.ResolveField(() => [FriendRelationship])
+  @nestAccessControl.UseRoles({
+    resource: "FriendRelationship",
+    action: "read",
+    possession: "any",
+  })
+  async friendRelationships(
+    @graphql.Parent() parent: User,
+    @graphql.Args() args: FriendRelationshipFindManyArgs
+  ): Promise<FriendRelationship[]> {
+    const results = await this.service.findFriendRelationships(parent.id, args);
+
+    if (!results) {
+      return [];
+    }
+
+    return results;
+  }
+
+  @common.UseInterceptors(AclFilterResponseInterceptor)
+  @graphql.ResolveField(() => [FriendRelationship])
+  @nestAccessControl.UseRoles({
+    resource: "FriendRelationship",
+    action: "read",
+    possession: "any",
+  })
+  async invites(
+    @graphql.Parent() parent: User,
+    @graphql.Args() args: FriendRelationshipFindManyArgs
+  ): Promise<FriendRelationship[]> {
+    const results = await this.service.findInvites(parent.id, args);
+
+    if (!results) {
+      return [];
+    }
+
+    return results;
+  }
+
+  @common.UseInterceptors(AclFilterResponseInterceptor)
+  @graphql.ResolveField(() => [PrivateMessage])
+  @nestAccessControl.UseRoles({
+    resource: "PrivateMessage",
+    action: "read",
+    possession: "any",
+  })
+  async privateMessages(
+    @graphql.Parent() parent: User,
+    @graphql.Args() args: PrivateMessageFindManyArgs
+  ): Promise<PrivateMessage[]> {
+    const results = await this.service.findPrivateMessages(parent.id, args);
+
+    if (!results) {
+      return [];
+    }
+
+    return results;
+  }
+
+  @common.UseInterceptors(AclFilterResponseInterceptor)
+  @graphql.ResolveField(() => [PrivateMessage])
+  @nestAccessControl.UseRoles({
+    resource: "PrivateMessage",
+    action: "read",
+    possession: "any",
+  })
+  async receivedMessges(
+    @graphql.Parent() parent: User,
+    @graphql.Args() args: PrivateMessageFindManyArgs
+  ): Promise<PrivateMessage[]> {
+    const results = await this.service.findReceivedMessges(parent.id, args);
+
+    if (!results) {
+      return [];
+    }
+
+    return results;
+  }
+
+  @common.UseInterceptors(AclFilterResponseInterceptor)
+  @graphql.ResolveField(() => [RoomMessage])
+  @nestAccessControl.UseRoles({
+    resource: "RoomMessage",
+    action: "read",
+    possession: "any",
+  })
+  async roomMessages(
+    @graphql.Parent() parent: User,
+    @graphql.Args() args: RoomMessageFindManyArgs
+  ): Promise<RoomMessage[]> {
+    const results = await this.service.findRoomMessages(parent.id, args);
+
+    if (!results) {
+      return [];
+    }
+
+    return results;
   }
 }
