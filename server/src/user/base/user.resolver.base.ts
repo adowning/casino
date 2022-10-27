@@ -27,6 +27,8 @@ import { UserFindUniqueArgs } from "./UserFindUniqueArgs";
 import { User } from "./User";
 import { FriendRelationshipFindManyArgs } from "../../friendRelationship/base/FriendRelationshipFindManyArgs";
 import { FriendRelationship } from "../../friendRelationship/base/FriendRelationship";
+import { GameFindManyArgs } from "../../game/base/GameFindManyArgs";
+import { Game } from "../../game/base/Game";
 import { PrivateMessageFindManyArgs } from "../../privateMessage/base/PrivateMessageFindManyArgs";
 import { PrivateMessage } from "../../privateMessage/base/PrivateMessage";
 import { RoomMessageFindManyArgs } from "../../roomMessage/base/RoomMessageFindManyArgs";
@@ -154,6 +156,26 @@ export class UserResolverBase {
     @graphql.Args() args: FriendRelationshipFindManyArgs
   ): Promise<FriendRelationship[]> {
     const results = await this.service.findFriendRelationships(parent.id, args);
+
+    if (!results) {
+      return [];
+    }
+
+    return results;
+  }
+
+  @common.UseInterceptors(AclFilterResponseInterceptor)
+  @graphql.ResolveField(() => [Game])
+  @nestAccessControl.UseRoles({
+    resource: "Game",
+    action: "read",
+    possession: "any",
+  })
+  async games(
+    @graphql.Parent() parent: User,
+    @graphql.Args() args: GameFindManyArgs
+  ): Promise<Game[]> {
+    const results = await this.service.findGames(parent.id, args);
 
     if (!results) {
       return [];

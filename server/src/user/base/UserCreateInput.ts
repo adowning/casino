@@ -20,6 +20,7 @@ import {
 } from "class-validator";
 import { FriendRelationshipCreateNestedManyWithoutUsersInput } from "./FriendRelationshipCreateNestedManyWithoutUsersInput";
 import { Type } from "class-transformer";
+import { GameCreateNestedManyWithoutUsersInput } from "./GameCreateNestedManyWithoutUsersInput";
 import { PrivateMessageCreateNestedManyWithoutUsersInput } from "./PrivateMessageCreateNestedManyWithoutUsersInput";
 import { GraphQLJSON } from "graphql-type-json";
 import { InputJsonValue } from "../../types";
@@ -49,6 +50,18 @@ class UserCreateInput {
     nullable: true,
   })
   friendRelationships?: FriendRelationshipCreateNestedManyWithoutUsersInput;
+
+  @ApiProperty({
+    required: false,
+    type: () => GameCreateNestedManyWithoutUsersInput,
+  })
+  @ValidateNested()
+  @Type(() => GameCreateNestedManyWithoutUsersInput)
+  @IsOptional()
+  @Field(() => GameCreateNestedManyWithoutUsersInput, {
+    nullable: true,
+  })
+  games?: GameCreateNestedManyWithoutUsersInput;
 
   @ApiProperty({
     required: false,

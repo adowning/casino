@@ -14,6 +14,7 @@ import {
   Prisma,
   User,
   FriendRelationship,
+  Game,
   PrivateMessage,
   RoomMessage,
 } from "@prisma/client";
@@ -87,6 +88,17 @@ export class UserServiceBase {
         where: { id: parentId },
       })
       .friendRelationships(args);
+  }
+
+  async findGames(
+    parentId: string,
+    args: Prisma.GameFindManyArgs
+  ): Promise<Game[]> {
+    return this.prisma.user
+      .findUnique({
+        where: { id: parentId },
+      })
+      .games(args);
   }
 
   async findInvites(

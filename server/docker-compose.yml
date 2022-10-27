@@ -6,7 +6,7 @@ services:
       args:
         NPM_LOG_LEVEL: notice
     ports:
-      - ${SERVER_PORT}:3000
+      - ${PORT}:3000
     environment:
       BCRYPT_SALT: ${BCRYPT_SALT}
       JWT_SECRET_KEY: ${JWT_SECRET_KEY}
@@ -39,12 +39,9 @@ services:
     healthcheck:
       test:
         - CMD
-        - pg_isready
-        - -q
-        - -d
-        - ${DB_DB_NAME}
-        - -U
-        - ${DB_USER}
+        - sh
+        - -c
+        - pg_isready -q -d ${DB_DB_NAME} -U ${DB_USER}
       timeout: 45s
       interval: 10s
       retries: 10

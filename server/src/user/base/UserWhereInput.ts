@@ -15,6 +15,7 @@ import { StringNullableFilter } from "../../util/StringNullableFilter";
 import { Type } from "class-transformer";
 import { IsOptional, ValidateNested, IsEnum } from "class-validator";
 import { FriendRelationshipListRelationFilter } from "../../friendRelationship/base/FriendRelationshipListRelationFilter";
+import { GameListRelationFilter } from "../../game/base/GameListRelationFilter";
 import { StringFilter } from "../../util/StringFilter";
 import { PrivateMessageListRelationFilter } from "../../privateMessage/base/PrivateMessageListRelationFilter";
 import { RoomMessageListRelationFilter } from "../../roomMessage/base/RoomMessageListRelationFilter";
@@ -43,6 +44,18 @@ class UserWhereInput {
     nullable: true,
   })
   friendRelationships?: FriendRelationshipListRelationFilter;
+
+  @ApiProperty({
+    required: false,
+    type: () => GameListRelationFilter,
+  })
+  @ValidateNested()
+  @Type(() => GameListRelationFilter)
+  @IsOptional()
+  @Field(() => GameListRelationFilter, {
+    nullable: true,
+  })
+  games?: GameListRelationFilter;
 
   @ApiProperty({
     required: false,

@@ -21,6 +21,7 @@ import {
 } from "class-validator";
 import { Type } from "class-transformer";
 import { FriendRelationship } from "../../friendRelationship/base/FriendRelationship";
+import { Game } from "../../game/base/Game";
 import { PrivateMessage } from "../../privateMessage/base/PrivateMessage";
 import { GraphQLJSON } from "graphql-type-json";
 import { JsonValue } from "type-fest";
@@ -55,6 +56,15 @@ class User {
   @Type(() => FriendRelationship)
   @IsOptional()
   friendRelationships?: Array<FriendRelationship>;
+
+  @ApiProperty({
+    required: false,
+    type: () => [Game],
+  })
+  @ValidateNested()
+  @Type(() => Game)
+  @IsOptional()
+  games?: Array<Game>;
 
   @ApiProperty({
     required: true,

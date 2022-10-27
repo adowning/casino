@@ -6,6 +6,7 @@ import { RoomModule } from "./room/room.module";
 import { RoomMessageModule } from "./roomMessage/roomMessage.module";
 import { PrivateMessageModule } from "./privateMessage/privateMessage.module";
 import { FriendRelationshipModule } from "./friendRelationship/friendRelationship.module";
+import { GameModule } from "./game/game.module";
 import { ACLModule } from "./auth/acl.module";
 import { AuthModule } from "./auth/auth.module";
 import { HealthModule } from "./health/health.module";
@@ -23,6 +24,7 @@ import { GraphQLModule } from "@nestjs/graphql";
     RoomMessageModule,
     PrivateMessageModule,
     FriendRelationshipModule,
+    GameModule,
     ACLModule,
     AuthModule,
     HealthModule,
