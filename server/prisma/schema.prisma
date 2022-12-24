@@ -11,6 +11,7 @@ model User {
   createdAt           DateTime             @default(now())
   firstName           String?
   friendRelationships FriendRelationship[] @relation(name: "acceptor")
+  games               Game[]
   id                  String               @id @default(cuid())
   invites             FriendRelationship[] @relation(name: "inviter")
   lastName            String?
@@ -61,8 +62,49 @@ model FriendRelationship {
   updatedAt  DateTime @updatedAt
 }
 
+model Game {
+  active          String?
+  coverImage      String?
+  createdAt       DateTime             @default(now())
+  description     User?                @relation(fields: [descriptionId], references: [id])
+  descriptionId   String?
+  developer       Boolean?
+  favoriteCount   String?
+  gametype        Boolean?
+  id              String               @id @default(cuid())
+  multiplayer     EnumGameMultiplayer?
+  timesPlayed     String?
+  title           String?
+  totalIn         String?
+  totalOut        String?
+  updatedAt       DateTime             @updatedAt
+  websiteCategory Float?
+}
+
+model ArcadeGame {
+  commands           Int?
+  createdAt          DateTime @default(now())
+  fishDamages        String?
+  fishUpdateInterval Json?
+  gameBalanceInCents String?
+  gameCode           String?
+  gameId             String?
+  gameSettings       Int?
+  id                 String   @id @default(cuid())
+  payTables          Json?
+  sceneBullets       Json?
+  sceneFish          Int?
+  updatedAt          DateTime @updatedAt
+}
+
 enum EnumUserStatus {
   Online
   Offline
   Busy
+}
+
+enum EnumGameMultiplayer {
+  Arcade
+  Slots
+  Provablyair
 }
