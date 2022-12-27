@@ -1,5 +1,5 @@
 {
-  "name": "@core/server",
+  "name": "@arcade-service/server",
   "private": true,
   "scripts": {
     "start": "nest start",
@@ -15,8 +15,8 @@
     "prisma:generate": "prisma generate",
     "docker:db": "docker-compose -f docker-compose.db.yml up -d",
     "docker:build": "docker build .",
-    "compose:up": "docker compose up -d",
-    "compose:down": "docker compose down --volumes"
+    "compose:up": "docker-compose up -d",
+    "compose:down": "docker-compose down --volumes"
   },
   "dependencies": {
     "@nestjs/common": "8.4.7",
@@ -44,9 +44,7 @@
     "passport-jwt": "4.0.0",
     "reflect-metadata": "0.1.13",
     "swagger-ui-express": "4.3.0",
-    "ts-node": "9.1.1",
-    "@nestjs/microservices": "8.2.3",
-    "kafkajs": "2.2.0"
+    "ts-node": "9.1.1"
   },
   "devDependencies": {
     "@nestjs/cli": "8.2.5",
