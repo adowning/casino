@@ -27,9 +27,7 @@ import { UserWhereUniqueInput } from "./UserWhereUniqueInput";
 import { UserFindManyArgs } from "./UserFindManyArgs";
 import { UserUpdateInput } from "./UserUpdateInput";
 import { User } from "./User";
-import { GameFindManyArgs } from "../../game/base/GameFindManyArgs";
-import { Game } from "../../game/base/Game";
-import { GameWhereUniqueInput } from "../../game/base/GameWhereUniqueInput";
+
 @swagger.ApiBearerAuth()
 @common.UseGuards(defaultAuthGuard.DefaultAuthGuard, nestAccessControl.ACGuard)
 export class UserControllerBase {
@@ -56,6 +54,7 @@ export class UserControllerBase {
         id: true,
         lastName: true,
         roles: true,
+
         updatedAt: true,
         username: true,
       },
@@ -82,6 +81,7 @@ export class UserControllerBase {
         id: true,
         lastName: true,
         roles: true,
+
         updatedAt: true,
         username: true,
       },
@@ -109,6 +109,7 @@ export class UserControllerBase {
         id: true,
         lastName: true,
         roles: true,
+
         updatedAt: true,
         username: true,
       },
@@ -145,6 +146,7 @@ export class UserControllerBase {
           id: true,
           lastName: true,
           roles: true,
+
           updatedAt: true,
           username: true,
         },
@@ -180,6 +182,7 @@ export class UserControllerBase {
           id: true,
           lastName: true,
           roles: true,
+
           updatedAt: true,
           username: true,
         },
@@ -196,25 +199,7 @@ export class UserControllerBase {
 
   @common.UseInterceptors(AclFilterResponseInterceptor)
   @nestAccessControl.UseRoles({
-    resource: "Game",
-    action: "read",
-    possession: "any",
-  })
-  @common.Get("/:id/game")
-  @ApiNestedQuery(GameFindManyArgs)
-  async findManyGame(
-    @common.Req() request: Request,
-    @common.Param() params: UserWhereUniqueInput
-  ): Promise<Game[]> {
-    const query = plainToClass(GameFindManyArgs, request.query);
-    const results = await this.service.findGame(params.id, {
-      ...query,
-      select: {
-        createdAt: true,
-        gameType: true,
-        id: true,
-        name: true,
-        title: true,
+
         updatedAt: true,
       },
     });
@@ -231,13 +216,7 @@ export class UserControllerBase {
     action: "update",
     possession: "any",
   })
-  @common.Post("/:id/game")
-  async connectGame(
-    @common.Param() params: UserWhereUniqueInput,
-    @common.Body() body: GameWhereUniqueInput[]
-  ): Promise<void> {
-    const data = {
-      game: {
+
         connect: body,
       },
     };
@@ -253,13 +232,7 @@ export class UserControllerBase {
     action: "update",
     possession: "any",
   })
-  @common.Patch("/:id/game")
-  async updateGame(
-    @common.Param() params: UserWhereUniqueInput,
-    @common.Body() body: GameWhereUniqueInput[]
-  ): Promise<void> {
-    const data = {
-      game: {
+
         set: body,
       },
     };
@@ -275,13 +248,7 @@ export class UserControllerBase {
     action: "update",
     possession: "any",
   })
-  @common.Delete("/:id/game")
-  async disconnectGame(
-    @common.Param() params: UserWhereUniqueInput,
-    @common.Body() body: GameWhereUniqueInput[]
-  ): Promise<void> {
-    const data = {
-      game: {
+
         disconnect: body,
       },
     };

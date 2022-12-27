@@ -10,7 +10,7 @@ https://docs.amplication.com/how-to/custom-code
 ------------------------------------------------------------------------------
   */
 import { PrismaService } from "nestjs-prisma";
-import { Prisma, User, Game } from "@prisma/client";
+
 import { PasswordService } from "../../auth/password.service";
 import { transformStringFieldUpdateInput } from "../../prisma.util";
 
@@ -65,21 +65,47 @@ export class UserServiceBase {
           )),
       },
     });
-  }
+  }<<<<<<< amplication-build-clc6h1q1l04l3m30117r27h3p
+14
+ 
+import {
+15
+ 
+  Prisma,
+16
+ 
+  User,
+17
+ 
+  FriendRelationship,
+18
+ 
+  PrivateMessage,
+19
+ 
+  RoomMessage,
+20
+ 
+} from "@prisma/client";
+21
+ 
+=======
+22
+ 
+import { Prisma, User, Game } from "@prisma/client";
+23
+ 
   async delete<T extends Prisma.UserDeleteArgs>(
     args: Prisma.SelectSubset<T, Prisma.UserDeleteArgs>
   ): Promise<User> {
     return this.prisma.user.delete(args);
   }
 
-  async findGame(
-    parentId: string,
-    args: Prisma.GameFindManyArgs
-  ): Promise<Game[]> {
+
     return this.prisma.user
       .findUniqueOrThrow({
         where: { id: parentId },
       })
-      .game(args);
+
   }
 }

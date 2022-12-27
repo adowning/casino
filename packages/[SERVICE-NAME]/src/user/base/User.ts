@@ -17,11 +17,7 @@ import {
   IsOptional,
   ValidateNested,
   IsJSON,
-} from "class-validator";
-import { Type } from "class-transformer";
-import { Game } from "../../game/base/Game";
-import { GraphQLJSON } from "graphql-type-json";
-import { JsonValue } from "type-fest";
+
 @ObjectType()
 class User {
   @ApiProperty({
@@ -45,12 +41,7 @@ class User {
 
   @ApiProperty({
     required: false,
-    type: () => [Game],
-  })
-  @ValidateNested()
-  @Type(() => Game)
-  @IsOptional()
-  game?: Array<Game>;
+
 
   @ApiProperty({
     required: true,
@@ -62,6 +53,7 @@ class User {
 
   @ApiProperty({
     required: false,
+
     type: String,
   })
   @IsString()
@@ -72,6 +64,7 @@ class User {
   lastName!: string | null;
 
   @ApiProperty({
+<<<
     required: true,
   })
   @IsJSON()
@@ -79,6 +72,7 @@ class User {
   roles!: JsonValue;
 
   @ApiProperty({
+
     required: true,
   })
   @IsDate()
