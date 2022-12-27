@@ -11,12 +11,18 @@ https://docs.amplication.com/how-to/custom-code
   */
 import { ObjectType, Field } from "@nestjs/graphql";
 import { ApiProperty } from "@nestjs/swagger";
-import { IsDate, IsString, IsOptional, IsJSON } from "class-validator";
+import {
+  IsDate,
+  IsEnum,
+  IsOptional,
+  IsString,
+  ValidateNested,
+} from "class-validator";
 import { Type } from "class-transformer";
-import { GraphQLJSON } from "graphql-type-json";
-import { JsonValue } from "type-fest";
+import { EnumGameGameType } from "./EnumGameGameType";
+import { User } from "../../user/base/User";
 @ObjectType()
-class User {
+class Game {
   @ApiProperty({
     required: true,
   })
@@ -27,14 +33,14 @@ class User {
 
   @ApiProperty({
     required: false,
-    type: String,
+    enum: EnumGameGameType,
   })
-  @IsString()
+  @IsEnum(EnumGameGameType)
   @IsOptional()
-  @Field(() => String, {
+  @Field(() => EnumGameGameType, {
     nullable: true,
   })
-  firstName!: string | null;
+  gameType?: "Arcade" | "Slots" | null;
 
   @ApiProperty({
     required: true,
@@ -53,14 +59,18 @@ class User {
   @Field(() => String, {
     nullable: true,
   })
-  lastName!: string | null;
+  name!: string | null;
 
   @ApiProperty({
-    required: true,
+    required: false,
+    type: String,
   })
-  @IsJSON()
-  @Field(() => GraphQLJSON)
-  roles!: JsonValue;
+  @IsString()
+  @IsOptional()
+  @Field(() => String, {
+    nullable: true,
+  })
+  title!: string | null;
 
   @ApiProperty({
     required: true,
@@ -71,11 +81,12 @@ class User {
   updatedAt!: Date;
 
   @ApiProperty({
-    required: true,
-    type: String,
+    required: false,
+    type: () => [User],
   })
-  @IsString()
-  @Field(() => String)
-  username!: string;
+  @ValidateNested()
+  @Type(() => User)
+  @IsOptional()
+  users?: Array<User>;
 }
-export { User };
+export { Game };
