@@ -79,7 +79,6 @@ class UserOrderByInput {
   @Field(() => SortOrder, {
     nullable: true,
   })
-
   updatedAt?: SortOrder;
 
   @ApiProperty({
