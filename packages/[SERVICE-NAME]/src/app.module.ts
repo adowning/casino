@@ -2,12 +2,12 @@ import { Module, Scope } from "@nestjs/common";
 import { APP_INTERCEPTOR } from "@nestjs/core";
 import { MorganInterceptor, MorganModule } from "nest-morgan";
 import { UserModule } from "./user/user.module";
-
+import { GameModule } from "./game/game.module";
 import { ACLModule } from "./auth/acl.module";
 import { AuthModule } from "./auth/auth.module";
 import { HealthModule } from "./health/health.module";
 import { SecretsManagerModule } from "./providers/secrets/secretsManager.module";
-
+import { KafkaModule } from "./kafka/kafka.module";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { ServeStaticModule } from "@nestjs/serve-static";
 import { ServeStaticOptionsService } from "./serveStaticOptions.service";
@@ -17,12 +17,12 @@ import { GraphQLModule } from "@nestjs/graphql";
   controllers: [],
   imports: [
     UserModule,
-
+    GameModule,
     ACLModule,
     AuthModule,
     HealthModule,
     SecretsManagerModule,
-
+    KafkaModule,
     MorganModule,
     ConfigModule.forRoot({ isGlobal: true }),
     ServeStaticModule.forRootAsync({

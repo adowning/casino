@@ -13,7 +13,9 @@ import { InputType, Field } from "@nestjs/graphql";
 import { ApiProperty } from "@nestjs/swagger";
 import { StringNullableFilter } from "../../util/StringNullableFilter";
 import { Type } from "class-transformer";
-
+import { IsOptional, ValidateNested } from "class-validator";
+import { GameListRelationFilter } from "../../game/base/GameListRelationFilter";
+import { StringFilter } from "../../util/StringFilter";
 @InputType()
 class UserWhereInput {
   @ApiProperty({
@@ -29,7 +31,15 @@ class UserWhereInput {
 
   @ApiProperty({
     required: false,
-
+    type: () => GameListRelationFilter,
+  })
+  @ValidateNested()
+  @Type(() => GameListRelationFilter)
+  @IsOptional()
+  @Field(() => GameListRelationFilter, {
+    nullable: true,
+  })
+  game?: GameListRelationFilter;
 
   @ApiProperty({
     required: false,
@@ -44,7 +54,6 @@ class UserWhereInput {
 
   @ApiProperty({
     required: false,
-
     type: StringNullableFilter,
   })
   @Type(() => StringNullableFilter)
@@ -56,7 +65,6 @@ class UserWhereInput {
 
   @ApiProperty({
     required: false,
-
     type: StringFilter,
   })
   @Type(() => StringFilter)

@@ -1,4 +1,3 @@
-
 import { Injectable } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { INVALID_PASSWORD_ERROR, INVALID_USERNAME_ERROR } from "../constants";
