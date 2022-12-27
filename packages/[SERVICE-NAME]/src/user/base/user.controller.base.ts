@@ -27,7 +27,15 @@ import { UserWhereUniqueInput } from "./UserWhereUniqueInput";
 import { UserFindManyArgs } from "./UserFindManyArgs";
 import { UserUpdateInput } from "./UserUpdateInput";
 import { User } from "./User";
-
+import { FriendRelationshipFindManyArgs } from "../../friendRelationship/base/FriendRelationshipFindManyArgs";
+import { FriendRelationship } from "../../friendRelationship/base/FriendRelationship";
+import { FriendRelationshipWhereUniqueInput } from "../../friendRelationship/base/FriendRelationshipWhereUniqueInput";
+import { PrivateMessageFindManyArgs } from "../../privateMessage/base/PrivateMessageFindManyArgs";
+import { PrivateMessage } from "../../privateMessage/base/PrivateMessage";
+import { PrivateMessageWhereUniqueInput } from "../../privateMessage/base/PrivateMessageWhereUniqueInput";
+import { RoomMessageFindManyArgs } from "../../roomMessage/base/RoomMessageFindManyArgs";
+import { RoomMessage } from "../../roomMessage/base/RoomMessage";
+import { RoomMessageWhereUniqueInput } from "../../roomMessage/base/RoomMessageWhereUniqueInput";
 @swagger.ApiBearerAuth()
 @common.UseGuards(defaultAuthGuard.DefaultAuthGuard, nestAccessControl.ACGuard)
 export class UserControllerBase {
@@ -54,7 +62,7 @@ export class UserControllerBase {
         id: true,
         lastName: true,
         roles: true,
-
+        status: true,
         updatedAt: true,
         username: true,
       },
@@ -81,7 +89,7 @@ export class UserControllerBase {
         id: true,
         lastName: true,
         roles: true,
-
+        status: true,
         updatedAt: true,
         username: true,
       },
@@ -109,7 +117,7 @@ export class UserControllerBase {
         id: true,
         lastName: true,
         roles: true,
-
+        status: true,
         updatedAt: true,
         username: true,
       },
@@ -146,7 +154,7 @@ export class UserControllerBase {
           id: true,
           lastName: true,
           roles: true,
-
+          status: true,
           updatedAt: true,
           username: true,
         },
@@ -182,7 +190,7 @@ export class UserControllerBase {
           id: true,
           lastName: true,
           roles: true,
-
+          status: true,
           updatedAt: true,
           username: true,
         },
@@ -199,6 +207,34 @@ export class UserControllerBase {
 
   @common.UseInterceptors(AclFilterResponseInterceptor)
   @nestAccessControl.UseRoles({
+    resource: "FriendRelationship",
+    action: "read",
+    possession: "any",
+  })
+  @common.Get("/:id/friendRelationships")
+  @ApiNestedQuery(FriendRelationshipFindManyArgs)
+  async findManyFriendRelationships(
+    @common.Req() request: Request,
+    @common.Param() params: UserWhereUniqueInput
+  ): Promise<FriendRelationship[]> {
+    const query = plainToClass(FriendRelationshipFindManyArgs, request.query);
+    const results = await this.service.findFriendRelationships(params.id, {
+      ...query,
+      select: {
+        acceptor: {
+          select: {
+            id: true,
+          },
+        },
+
+        createdAt: true,
+        id: true,
+
+        inviter: {
+          select: {
+            id: true,
+          },
+        },
 
         updatedAt: true,
       },
@@ -216,7 +252,13 @@ export class UserControllerBase {
     action: "update",
     possession: "any",
   })
-
+  @common.Post("/:id/friendRelationships")
+  async connectFriendRelationships(
+    @common.Param() params: UserWhereUniqueInput,
+    @common.Body() body: FriendRelationshipWhereUniqueInput[]
+  ): Promise<void> {
+    const data = {
+      friendRelationships: {
         connect: body,
       },
     };
@@ -232,7 +274,13 @@ export class UserControllerBase {
     action: "update",
     possession: "any",
   })
-
+  @common.Patch("/:id/friendRelationships")
+  async updateFriendRelationships(
+    @common.Param() params: UserWhereUniqueInput,
+    @common.Body() body: FriendRelationshipWhereUniqueInput[]
+  ): Promise<void> {
+    const data = {
+      friendRelationships: {
         set: body,
       },
     };
@@ -248,7 +296,443 @@ export class UserControllerBase {
     action: "update",
     possession: "any",
   })
+  @common.Delete("/:id/friendRelationships")
+  async disconnectFriendRelationships(
+    @common.Param() params: UserWhereUniqueInput,
+    @common.Body() body: FriendRelationshipWhereUniqueInput[]
+  ): Promise<void> {
+    const data = {
+      friendRelationships: {
+        disconnect: body,
+      },
+    };
+    await this.service.update({
+      where: params,
+      data,
+      select: { id: true },
+    });
+  }
 
+  @common.UseInterceptors(AclFilterResponseInterceptor)
+  @nestAccessControl.UseRoles({
+    resource: "FriendRelationship",
+    action: "read",
+    possession: "any",
+  })
+  @common.Get("/:id/invites")
+  @ApiNestedQuery(FriendRelationshipFindManyArgs)
+  async findManyInvites(
+    @common.Req() request: Request,
+    @common.Param() params: UserWhereUniqueInput
+  ): Promise<FriendRelationship[]> {
+    const query = plainToClass(FriendRelationshipFindManyArgs, request.query);
+    const results = await this.service.findInvites(params.id, {
+      ...query,
+      select: {
+        acceptor: {
+          select: {
+            id: true,
+          },
+        },
+
+        createdAt: true,
+        id: true,
+
+        inviter: {
+          select: {
+            id: true,
+          },
+        },
+
+        updatedAt: true,
+      },
+    });
+    if (results === null) {
+      throw new errors.NotFoundException(
+        `No resource was found for ${JSON.stringify(params)}`
+      );
+    }
+    return results;
+  }
+
+  @nestAccessControl.UseRoles({
+    resource: "User",
+    action: "update",
+    possession: "any",
+  })
+  @common.Post("/:id/invites")
+  async connectInvites(
+    @common.Param() params: UserWhereUniqueInput,
+    @common.Body() body: FriendRelationshipWhereUniqueInput[]
+  ): Promise<void> {
+    const data = {
+      invites: {
+        connect: body,
+      },
+    };
+    await this.service.update({
+      where: params,
+      data,
+      select: { id: true },
+    });
+  }
+
+  @nestAccessControl.UseRoles({
+    resource: "User",
+    action: "update",
+    possession: "any",
+  })
+  @common.Patch("/:id/invites")
+  async updateInvites(
+    @common.Param() params: UserWhereUniqueInput,
+    @common.Body() body: FriendRelationshipWhereUniqueInput[]
+  ): Promise<void> {
+    const data = {
+      invites: {
+        set: body,
+      },
+    };
+    await this.service.update({
+      where: params,
+      data,
+      select: { id: true },
+    });
+  }
+
+  @nestAccessControl.UseRoles({
+    resource: "User",
+    action: "update",
+    possession: "any",
+  })
+  @common.Delete("/:id/invites")
+  async disconnectInvites(
+    @common.Param() params: UserWhereUniqueInput,
+    @common.Body() body: FriendRelationshipWhereUniqueInput[]
+  ): Promise<void> {
+    const data = {
+      invites: {
+        disconnect: body,
+      },
+    };
+    await this.service.update({
+      where: params,
+      data,
+      select: { id: true },
+    });
+  }
+
+  @common.UseInterceptors(AclFilterResponseInterceptor)
+  @nestAccessControl.UseRoles({
+    resource: "PrivateMessage",
+    action: "read",
+    possession: "any",
+  })
+  @common.Get("/:id/privateMessages")
+  @ApiNestedQuery(PrivateMessageFindManyArgs)
+  async findManyPrivateMessages(
+    @common.Req() request: Request,
+    @common.Param() params: UserWhereUniqueInput
+  ): Promise<PrivateMessage[]> {
+    const query = plainToClass(PrivateMessageFindManyArgs, request.query);
+    const results = await this.service.findPrivateMessages(params.id, {
+      ...query,
+      select: {
+        content: true,
+        createdAt: true,
+        id: true,
+
+        receiver: {
+          select: {
+            id: true,
+          },
+        },
+
+        sender: {
+          select: {
+            id: true,
+          },
+        },
+
+        updatedAt: true,
+      },
+    });
+    if (results === null) {
+      throw new errors.NotFoundException(
+        `No resource was found for ${JSON.stringify(params)}`
+      );
+    }
+    return results;
+  }
+
+  @nestAccessControl.UseRoles({
+    resource: "User",
+    action: "update",
+    possession: "any",
+  })
+  @common.Post("/:id/privateMessages")
+  async connectPrivateMessages(
+    @common.Param() params: UserWhereUniqueInput,
+    @common.Body() body: PrivateMessageWhereUniqueInput[]
+  ): Promise<void> {
+    const data = {
+      privateMessages: {
+        connect: body,
+      },
+    };
+    await this.service.update({
+      where: params,
+      data,
+      select: { id: true },
+    });
+  }
+
+  @nestAccessControl.UseRoles({
+    resource: "User",
+    action: "update",
+    possession: "any",
+  })
+  @common.Patch("/:id/privateMessages")
+  async updatePrivateMessages(
+    @common.Param() params: UserWhereUniqueInput,
+    @common.Body() body: PrivateMessageWhereUniqueInput[]
+  ): Promise<void> {
+    const data = {
+      privateMessages: {
+        set: body,
+      },
+    };
+    await this.service.update({
+      where: params,
+      data,
+      select: { id: true },
+    });
+  }
+
+  @nestAccessControl.UseRoles({
+    resource: "User",
+    action: "update",
+    possession: "any",
+  })
+  @common.Delete("/:id/privateMessages")
+  async disconnectPrivateMessages(
+    @common.Param() params: UserWhereUniqueInput,
+    @common.Body() body: PrivateMessageWhereUniqueInput[]
+  ): Promise<void> {
+    const data = {
+      privateMessages: {
+        disconnect: body,
+      },
+    };
+    await this.service.update({
+      where: params,
+      data,
+      select: { id: true },
+    });
+  }
+
+  @common.UseInterceptors(AclFilterResponseInterceptor)
+  @nestAccessControl.UseRoles({
+    resource: "PrivateMessage",
+    action: "read",
+    possession: "any",
+  })
+  @common.Get("/:id/receivedMessges")
+  @ApiNestedQuery(PrivateMessageFindManyArgs)
+  async findManyReceivedMessges(
+    @common.Req() request: Request,
+    @common.Param() params: UserWhereUniqueInput
+  ): Promise<PrivateMessage[]> {
+    const query = plainToClass(PrivateMessageFindManyArgs, request.query);
+    const results = await this.service.findReceivedMessges(params.id, {
+      ...query,
+      select: {
+        content: true,
+        createdAt: true,
+        id: true,
+
+        receiver: {
+          select: {
+            id: true,
+          },
+        },
+
+        sender: {
+          select: {
+            id: true,
+          },
+        },
+
+        updatedAt: true,
+      },
+    });
+    if (results === null) {
+      throw new errors.NotFoundException(
+        `No resource was found for ${JSON.stringify(params)}`
+      );
+    }
+    return results;
+  }
+
+  @nestAccessControl.UseRoles({
+    resource: "User",
+    action: "update",
+    possession: "any",
+  })
+  @common.Post("/:id/receivedMessges")
+  async connectReceivedMessges(
+    @common.Param() params: UserWhereUniqueInput,
+    @common.Body() body: PrivateMessageWhereUniqueInput[]
+  ): Promise<void> {
+    const data = {
+      receivedMessges: {
+        connect: body,
+      },
+    };
+    await this.service.update({
+      where: params,
+      data,
+      select: { id: true },
+    });
+  }
+
+  @nestAccessControl.UseRoles({
+    resource: "User",
+    action: "update",
+    possession: "any",
+  })
+  @common.Patch("/:id/receivedMessges")
+  async updateReceivedMessges(
+    @common.Param() params: UserWhereUniqueInput,
+    @common.Body() body: PrivateMessageWhereUniqueInput[]
+  ): Promise<void> {
+    const data = {
+      receivedMessges: {
+        set: body,
+      },
+    };
+    await this.service.update({
+      where: params,
+      data,
+      select: { id: true },
+    });
+  }
+
+  @nestAccessControl.UseRoles({
+    resource: "User",
+    action: "update",
+    possession: "any",
+  })
+  @common.Delete("/:id/receivedMessges")
+  async disconnectReceivedMessges(
+    @common.Param() params: UserWhereUniqueInput,
+    @common.Body() body: PrivateMessageWhereUniqueInput[]
+  ): Promise<void> {
+    const data = {
+      receivedMessges: {
+        disconnect: body,
+      },
+    };
+    await this.service.update({
+      where: params,
+      data,
+      select: { id: true },
+    });
+  }
+
+  @common.UseInterceptors(AclFilterResponseInterceptor)
+  @nestAccessControl.UseRoles({
+    resource: "RoomMessage",
+    action: "read",
+    possession: "any",
+  })
+  @common.Get("/:id/roomMessages")
+  @ApiNestedQuery(RoomMessageFindManyArgs)
+  async findManyRoomMessages(
+    @common.Req() request: Request,
+    @common.Param() params: UserWhereUniqueInput
+  ): Promise<RoomMessage[]> {
+    const query = plainToClass(RoomMessageFindManyArgs, request.query);
+    const results = await this.service.findRoomMessages(params.id, {
+      ...query,
+      select: {
+        content: true,
+        createdAt: true,
+        id: true,
+        roomId: true,
+
+        sender: {
+          select: {
+            id: true,
+          },
+        },
+
+        updatedAt: true,
+      },
+    });
+    if (results === null) {
+      throw new errors.NotFoundException(
+        `No resource was found for ${JSON.stringify(params)}`
+      );
+    }
+    return results;
+  }
+
+  @nestAccessControl.UseRoles({
+    resource: "User",
+    action: "update",
+    possession: "any",
+  })
+  @common.Post("/:id/roomMessages")
+  async connectRoomMessages(
+    @common.Param() params: UserWhereUniqueInput,
+    @common.Body() body: RoomMessageWhereUniqueInput[]
+  ): Promise<void> {
+    const data = {
+      roomMessages: {
+        connect: body,
+      },
+    };
+    await this.service.update({
+      where: params,
+      data,
+      select: { id: true },
+    });
+  }
+
+  @nestAccessControl.UseRoles({
+    resource: "User",
+    action: "update",
+    possession: "any",
+  })
+  @common.Patch("/:id/roomMessages")
+  async updateRoomMessages(
+    @common.Param() params: UserWhereUniqueInput,
+    @common.Body() body: RoomMessageWhereUniqueInput[]
+  ): Promise<void> {
+    const data = {
+      roomMessages: {
+        set: body,
+      },
+    };
+    await this.service.update({
+      where: params,
+      data,
+      select: { id: true },
+    });
+  }
+
+  @nestAccessControl.UseRoles({
+    resource: "User",
+    action: "update",
+    possession: "any",
+  })
+  @common.Delete("/:id/roomMessages")
+  async disconnectRoomMessages(
+    @common.Param() params: UserWhereUniqueInput,
+    @common.Body() body: RoomMessageWhereUniqueInput[]
+  ): Promise<void> {
+    const data = {
+      roomMessages: {
         disconnect: body,
       },
     };
