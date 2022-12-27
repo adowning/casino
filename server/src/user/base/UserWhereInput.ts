@@ -13,13 +13,8 @@ import { InputType, Field } from "@nestjs/graphql";
 import { ApiProperty } from "@nestjs/swagger";
 import { StringNullableFilter } from "../../util/StringNullableFilter";
 import { Type } from "class-transformer";
-import { IsOptional, ValidateNested, IsEnum } from "class-validator";
-import { FriendRelationshipListRelationFilter } from "../../friendRelationship/base/FriendRelationshipListRelationFilter";
-import { GameListRelationFilter } from "../../game/base/GameListRelationFilter";
+import { IsOptional } from "class-validator";
 import { StringFilter } from "../../util/StringFilter";
-import { PrivateMessageListRelationFilter } from "../../privateMessage/base/PrivateMessageListRelationFilter";
-import { RoomMessageListRelationFilter } from "../../roomMessage/base/RoomMessageListRelationFilter";
-import { EnumUserStatus } from "./EnumUserStatus";
 @InputType()
 class UserWhereInput {
   @ApiProperty({
@@ -35,30 +30,6 @@ class UserWhereInput {
 
   @ApiProperty({
     required: false,
-    type: () => FriendRelationshipListRelationFilter,
-  })
-  @ValidateNested()
-  @Type(() => FriendRelationshipListRelationFilter)
-  @IsOptional()
-  @Field(() => FriendRelationshipListRelationFilter, {
-    nullable: true,
-  })
-  friendRelationships?: FriendRelationshipListRelationFilter;
-
-  @ApiProperty({
-    required: false,
-    type: () => GameListRelationFilter,
-  })
-  @ValidateNested()
-  @Type(() => GameListRelationFilter)
-  @IsOptional()
-  @Field(() => GameListRelationFilter, {
-    nullable: true,
-  })
-  games?: GameListRelationFilter;
-
-  @ApiProperty({
-    required: false,
     type: StringFilter,
   })
   @Type(() => StringFilter)
@@ -70,18 +41,6 @@ class UserWhereInput {
 
   @ApiProperty({
     required: false,
-    type: () => FriendRelationshipListRelationFilter,
-  })
-  @ValidateNested()
-  @Type(() => FriendRelationshipListRelationFilter)
-  @IsOptional()
-  @Field(() => FriendRelationshipListRelationFilter, {
-    nullable: true,
-  })
-  invites?: FriendRelationshipListRelationFilter;
-
-  @ApiProperty({
-    required: false,
     type: StringNullableFilter,
   })
   @Type(() => StringNullableFilter)
@@ -90,53 +49,6 @@ class UserWhereInput {
     nullable: true,
   })
   lastName?: StringNullableFilter;
-
-  @ApiProperty({
-    required: false,
-    type: () => PrivateMessageListRelationFilter,
-  })
-  @ValidateNested()
-  @Type(() => PrivateMessageListRelationFilter)
-  @IsOptional()
-  @Field(() => PrivateMessageListRelationFilter, {
-    nullable: true,
-  })
-  privateMessages?: PrivateMessageListRelationFilter;
-
-  @ApiProperty({
-    required: false,
-    type: () => PrivateMessageListRelationFilter,
-  })
-  @ValidateNested()
-  @Type(() => PrivateMessageListRelationFilter)
-  @IsOptional()
-  @Field(() => PrivateMessageListRelationFilter, {
-    nullable: true,
-  })
-  receivedMessges?: PrivateMessageListRelationFilter;
-
-  @ApiProperty({
-    required: false,
-    type: () => RoomMessageListRelationFilter,
-  })
-  @ValidateNested()
-  @Type(() => RoomMessageListRelationFilter)
-  @IsOptional()
-  @Field(() => RoomMessageListRelationFilter, {
-    nullable: true,
-  })
-  roomMessages?: RoomMessageListRelationFilter;
-
-  @ApiProperty({
-    required: false,
-    enum: EnumUserStatus,
-  })
-  @IsEnum(EnumUserStatus)
-  @IsOptional()
-  @Field(() => EnumUserStatus, {
-    nullable: true,
-  })
-  status?: "Online" | "Offline" | "Busy";
 
   @ApiProperty({
     required: false,
