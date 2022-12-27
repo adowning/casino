@@ -10,7 +10,13 @@ https://docs.amplication.com/how-to/custom-code
 ------------------------------------------------------------------------------
   */
 import { PrismaService } from "nestjs-prisma";
-
+import {
+  Prisma,
+  User,
+  FriendRelationship,
+  PrivateMessage,
+  RoomMessage,
+} from "@prisma/client";
 import { PasswordService } from "../../auth/password.service";
 import { transformStringFieldUpdateInput } from "../../prisma.util";
 
@@ -65,47 +71,65 @@ export class UserServiceBase {
           )),
       },
     });
-  }<<<<<<< amplication-build-clc6h1q1l04l3m30117r27h3p
-14
- 
-import {
-15
- 
-  Prisma,
-16
- 
-  User,
-17
- 
-  FriendRelationship,
-18
- 
-  PrivateMessage,
-19
- 
-  RoomMessage,
-20
- 
-} from "@prisma/client";
-21
- 
-=======
-22
- 
-import { Prisma, User, Game } from "@prisma/client";
-23
- 
+  }
   async delete<T extends Prisma.UserDeleteArgs>(
     args: Prisma.SelectSubset<T, Prisma.UserDeleteArgs>
   ): Promise<User> {
     return this.prisma.user.delete(args);
   }
 
-
+  async findFriendRelationships(
+    parentId: string,
+    args: Prisma.FriendRelationshipFindManyArgs
+  ): Promise<FriendRelationship[]> {
     return this.prisma.user
       .findUniqueOrThrow({
         where: { id: parentId },
       })
+      .friendRelationships(args);
+  }
 
+  async findInvites(
+    parentId: string,
+    args: Prisma.FriendRelationshipFindManyArgs
+  ): Promise<FriendRelationship[]> {
+    return this.prisma.user
+      .findUniqueOrThrow({
+        where: { id: parentId },
+      })
+      .invites(args);
+  }
+
+  async findPrivateMessages(
+    parentId: string,
+    args: Prisma.PrivateMessageFindManyArgs
+  ): Promise<PrivateMessage[]> {
+    return this.prisma.user
+      .findUniqueOrThrow({
+        where: { id: parentId },
+      })
+      .privateMessages(args);
+  }
+
+  async findReceivedMessges(
+    parentId: string,
+    args: Prisma.PrivateMessageFindManyArgs
+  ): Promise<PrivateMessage[]> {
+    return this.prisma.user
+      .findUniqueOrThrow({
+        where: { id: parentId },
+      })
+      .receivedMessges(args);
+  }
+
+  async findRoomMessages(
+    parentId: string,
+    args: Prisma.RoomMessageFindManyArgs
+  ): Promise<RoomMessage[]> {
+    return this.prisma.user
+      .findUniqueOrThrow({
+        where: { id: parentId },
+      })
+      .roomMessages(args);
   }
 }
