@@ -11,58 +11,46 @@ https://docs.amplication.com/how-to/custom-code
   */
 import { InputType, Field } from "@nestjs/graphql";
 import { ApiProperty } from "@nestjs/swagger";
+import { GameWhereInput } from "./GameWhereInput";
+import { ValidateNested, IsOptional } from "class-validator";
+import { Type } from "class-transformer";
 
 @InputType()
-class UserCreateInput {
+class GameListRelationFilter {
   @ApiProperty({
     required: false,
-    type: String,
+    type: () => GameWhereInput,
   })
-  @IsString()
+  @ValidateNested()
+  @Type(() => GameWhereInput)
   @IsOptional()
-  @Field(() => String, {
+  @Field(() => GameWhereInput, {
     nullable: true,
   })
-  firstName?: string | null;
+  every?: GameWhereInput;
 
   @ApiProperty({
     required: false,
-
-
-  @ApiProperty({
-    required: false,
-    type: String,
+    type: () => GameWhereInput,
   })
-  @IsString()
+  @ValidateNested()
+  @Type(() => GameWhereInput)
   @IsOptional()
-  @Field(() => String, {
+  @Field(() => GameWhereInput, {
     nullable: true,
   })
-  lastName?: string | null;
+  some?: GameWhereInput;
 
   @ApiProperty({
-    required: true,
-    type: String,
+    required: false,
+    type: () => GameWhereInput,
   })
-  @IsString()
-  @Field(() => String)
-  password!: string;
-
-  @ApiProperty({
-
-    required: true,
+  @ValidateNested()
+  @Type(() => GameWhereInput)
+  @IsOptional()
+  @Field(() => GameWhereInput, {
+    nullable: true,
   })
-  @IsJSON()
-  @Field(() => GraphQLJSON)
-  roles!: InputJsonValue;
-
-  @ApiProperty({
-
-    required: true,
-    type: String,
-  })
-  @IsString()
-  @Field(() => String)
-  username!: string;
+  none?: GameWhereInput;
 }
-export { UserCreateInput };
+export { GameListRelationFilter };

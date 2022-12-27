@@ -17,7 +17,7 @@ import { SortOrder } from "../../util/SortOrder";
   isAbstract: true,
   description: undefined,
 })
-class UserOrderByInput {
+class GameOrderByInput {
   @ApiProperty({
     required: false,
     enum: ["asc", "desc"],
@@ -34,7 +34,7 @@ class UserOrderByInput {
   @Field(() => SortOrder, {
     nullable: true,
   })
-  firstName?: SortOrder;
+  gameType?: SortOrder;
 
   @ApiProperty({
     required: false,
@@ -52,7 +52,7 @@ class UserOrderByInput {
   @Field(() => SortOrder, {
     nullable: true,
   })
-  lastName?: SortOrder;
+  name?: SortOrder;
 
   @ApiProperty({
     required: false,
@@ -61,7 +61,7 @@ class UserOrderByInput {
   @Field(() => SortOrder, {
     nullable: true,
   })
-  password?: SortOrder;
+  title?: SortOrder;
 
   @ApiProperty({
     required: false,
@@ -70,26 +70,7 @@ class UserOrderByInput {
   @Field(() => SortOrder, {
     nullable: true,
   })
-  roles?: SortOrder;
-
-  @ApiProperty({
-    required: false,
-    enum: ["asc", "desc"],
-  })
-  @Field(() => SortOrder, {
-    nullable: true,
-  })
-
   updatedAt?: SortOrder;
-
-  @ApiProperty({
-    required: false,
-    enum: ["asc", "desc"],
-  })
-  @Field(() => SortOrder, {
-    nullable: true,
-  })
-  username?: SortOrder;
 }
 
-export { UserOrderByInput };
+export { GameOrderByInput };

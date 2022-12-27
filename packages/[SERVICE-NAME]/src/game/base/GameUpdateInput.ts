@@ -11,34 +11,22 @@ https://docs.amplication.com/how-to/custom-code
   */
 import { InputType, Field } from "@nestjs/graphql";
 import { ApiProperty } from "@nestjs/swagger";
-
+import { EnumGameGameType } from "./EnumGameGameType";
+import { IsEnum, IsOptional, IsString, ValidateNested } from "class-validator";
+import { UserUpdateManyWithoutGamesInput } from "./UserUpdateManyWithoutGamesInput";
+import { Type } from "class-transformer";
 @InputType()
-class UserUpdateInput {
+class GameUpdateInput {
   @ApiProperty({
     required: false,
-    type: String,
+    enum: EnumGameGameType,
   })
-  @IsString()
+  @IsEnum(EnumGameGameType)
   @IsOptional()
-  @Field(() => String, {
+  @Field(() => EnumGameGameType, {
     nullable: true,
   })
-  firstName?: string | null;
-
-  @ApiProperty({
-    required: false,
-
-
-  @ApiProperty({
-    required: false,
-    type: String,
-  })
-  @IsString()
-  @IsOptional()
-  @Field(() => String, {
-    nullable: true,
-  })
-  lastName?: string | null;
+  gameType?: "Arcade" | "Slots" | null;
 
   @ApiProperty({
     required: false,
@@ -49,22 +37,10 @@ class UserUpdateInput {
   @Field(() => String, {
     nullable: true,
   })
-  password?: string;
+  name?: string | null;
 
   @ApiProperty({
     required: false,
-
-  })
-  @IsJSON()
-  @IsOptional()
-  @Field(() => GraphQLJSON, {
-    nullable: true,
-  })
-  roles?: InputJsonValue;
-
-  @ApiProperty({
-    required: false,
-
     type: String,
   })
   @IsString()
@@ -72,6 +48,18 @@ class UserUpdateInput {
   @Field(() => String, {
     nullable: true,
   })
-  username?: string;
+  title?: string | null;
+
+  @ApiProperty({
+    required: false,
+    type: () => UserUpdateManyWithoutGamesInput,
+  })
+  @ValidateNested()
+  @Type(() => UserUpdateManyWithoutGamesInput)
+  @IsOptional()
+  @Field(() => UserUpdateManyWithoutGamesInput, {
+    nullable: true,
+  })
+  users?: UserUpdateManyWithoutGamesInput;
 }
-export { UserUpdateInput };
+export { GameUpdateInput };

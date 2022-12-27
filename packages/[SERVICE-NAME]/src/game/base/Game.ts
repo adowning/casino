@@ -9,11 +9,47 @@ https://docs.amplication.com/how-to/custom-code
 
 ------------------------------------------------------------------------------
   */
-import { InputType, Field } from "@nestjs/graphql";
+import { ObjectType, Field } from "@nestjs/graphql";
 import { ApiProperty } from "@nestjs/swagger";
+import {
+  IsDate,
+  IsEnum,
+  IsOptional,
+  IsString,
+  ValidateNested,
+} from "class-validator";
+import { Type } from "class-transformer";
+import { EnumGameGameType } from "./EnumGameGameType";
+import { User } from "../../user/base/User";
+@ObjectType()
+class Game {
+  @ApiProperty({
+    required: true,
+  })
+  @IsDate()
+  @Type(() => Date)
+  @Field(() => Date)
+  createdAt!: Date;
 
-@InputType()
-class UserUpdateInput {
+  @ApiProperty({
+    required: false,
+    enum: EnumGameGameType,
+  })
+  @IsEnum(EnumGameGameType)
+  @IsOptional()
+  @Field(() => EnumGameGameType, {
+    nullable: true,
+  })
+  gameType?: "Arcade" | "Slots" | null;
+
+  @ApiProperty({
+    required: true,
+    type: String,
+  })
+  @IsString()
+  @Field(() => String)
+  id!: string;
+
   @ApiProperty({
     required: false,
     type: String,
@@ -23,11 +59,7 @@ class UserUpdateInput {
   @Field(() => String, {
     nullable: true,
   })
-  firstName?: string | null;
-
-  @ApiProperty({
-    required: false,
-
+  name!: string | null;
 
   @ApiProperty({
     required: false,
@@ -38,40 +70,23 @@ class UserUpdateInput {
   @Field(() => String, {
     nullable: true,
   })
-  lastName?: string | null;
+  title!: string | null;
+
+  @ApiProperty({
+    required: true,
+  })
+  @IsDate()
+  @Type(() => Date)
+  @Field(() => Date)
+  updatedAt!: Date;
 
   @ApiProperty({
     required: false,
-    type: String,
+    type: () => [User],
   })
-  @IsString()
+  @ValidateNested()
+  @Type(() => User)
   @IsOptional()
-  @Field(() => String, {
-    nullable: true,
-  })
-  password?: string;
-
-  @ApiProperty({
-    required: false,
-
-  })
-  @IsJSON()
-  @IsOptional()
-  @Field(() => GraphQLJSON, {
-    nullable: true,
-  })
-  roles?: InputJsonValue;
-
-  @ApiProperty({
-    required: false,
-
-    type: String,
-  })
-  @IsString()
-  @IsOptional()
-  @Field(() => String, {
-    nullable: true,
-  })
-  username?: string;
+  users?: Array<User>;
 }
-export { UserUpdateInput };
+export { Game };

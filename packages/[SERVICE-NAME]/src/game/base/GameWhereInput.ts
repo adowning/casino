@@ -11,25 +11,24 @@ https://docs.amplication.com/how-to/custom-code
   */
 import { InputType, Field } from "@nestjs/graphql";
 import { ApiProperty } from "@nestjs/swagger";
-import { StringNullableFilter } from "../../util/StringNullableFilter";
+import { EnumGameGameType } from "./EnumGameGameType";
+import { IsEnum, IsOptional, ValidateNested } from "class-validator";
+import { StringFilter } from "../../util/StringFilter";
 import { Type } from "class-transformer";
-
+import { StringNullableFilter } from "../../util/StringNullableFilter";
+import { UserListRelationFilter } from "../../user/base/UserListRelationFilter";
 @InputType()
-class UserWhereInput {
+class GameWhereInput {
   @ApiProperty({
     required: false,
-    type: StringNullableFilter,
+    enum: EnumGameGameType,
   })
-  @Type(() => StringNullableFilter)
+  @IsEnum(EnumGameGameType)
   @IsOptional()
-  @Field(() => StringNullableFilter, {
+  @Field(() => EnumGameGameType, {
     nullable: true,
   })
-  firstName?: StringNullableFilter;
-
-  @ApiProperty({
-    required: false,
-
+  gameType?: "Arcade" | "Slots";
 
   @ApiProperty({
     required: false,
@@ -44,7 +43,6 @@ class UserWhereInput {
 
   @ApiProperty({
     required: false,
-
     type: StringNullableFilter,
   })
   @Type(() => StringNullableFilter)
@@ -52,18 +50,29 @@ class UserWhereInput {
   @Field(() => StringNullableFilter, {
     nullable: true,
   })
-  lastName?: StringNullableFilter;
+  name?: StringNullableFilter;
 
   @ApiProperty({
     required: false,
-
-    type: StringFilter,
+    type: StringNullableFilter,
   })
-  @Type(() => StringFilter)
+  @Type(() => StringNullableFilter)
   @IsOptional()
-  @Field(() => StringFilter, {
+  @Field(() => StringNullableFilter, {
     nullable: true,
   })
-  username?: StringFilter;
+  title?: StringNullableFilter;
+
+  @ApiProperty({
+    required: false,
+    type: () => UserListRelationFilter,
+  })
+  @ValidateNested()
+  @Type(() => UserListRelationFilter)
+  @IsOptional()
+  @Field(() => UserListRelationFilter, {
+    nullable: true,
+  })
+  users?: UserListRelationFilter;
 }
-export { UserWhereInput };
+export { GameWhereInput };

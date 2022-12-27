@@ -10,59 +10,35 @@ https://docs.amplication.com/how-to/custom-code
 ------------------------------------------------------------------------------
   */
 import { InputType, Field } from "@nestjs/graphql";
+import { UserWhereUniqueInput } from "../../user/base/UserWhereUniqueInput";
 import { ApiProperty } from "@nestjs/swagger";
-
 @InputType()
-class UserCreateInput {
-  @ApiProperty({
-    required: false,
-    type: String,
-  })
-  @IsString()
-  @IsOptional()
-  @Field(() => String, {
+class UserUpdateManyWithoutGamesInput {
+  @Field(() => [UserWhereUniqueInput], {
     nullable: true,
   })
-  firstName?: string | null;
-
   @ApiProperty({
     required: false,
-
-
-  @ApiProperty({
-    required: false,
-    type: String,
+    type: () => [UserWhereUniqueInput],
   })
-  @IsString()
-  @IsOptional()
-  @Field(() => String, {
+  connect?: Array<UserWhereUniqueInput>;
+
+  @Field(() => [UserWhereUniqueInput], {
     nullable: true,
   })
-  lastName?: string | null;
-
   @ApiProperty({
-    required: true,
-    type: String,
+    required: false,
+    type: () => [UserWhereUniqueInput],
   })
-  @IsString()
-  @Field(() => String)
-  password!: string;
+  disconnect?: Array<UserWhereUniqueInput>;
 
+  @Field(() => [UserWhereUniqueInput], {
+    nullable: true,
+  })
   @ApiProperty({
-
-    required: true,
+    required: false,
+    type: () => [UserWhereUniqueInput],
   })
-  @IsJSON()
-  @Field(() => GraphQLJSON)
-  roles!: InputJsonValue;
-
-  @ApiProperty({
-
-    required: true,
-    type: String,
-  })
-  @IsString()
-  @Field(() => String)
-  username!: string;
+  set?: Array<UserWhereUniqueInput>;
 }
-export { UserCreateInput };
+export { UserUpdateManyWithoutGamesInput };
