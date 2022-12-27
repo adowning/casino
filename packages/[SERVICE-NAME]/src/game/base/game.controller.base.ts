@@ -18,96 +18,96 @@ import * as errors from "../../errors";
 import { Request } from "express";
 import { plainToClass } from "class-transformer";
 import { ApiNestedQuery } from "../../decorators/api-nested-query.decorator";
-import { UserService } from "../user.service";
+import { GameService } from "../game.service";
 import { AclValidateRequestInterceptor } from "../../interceptors/aclValidateRequest.interceptor";
 import { AclFilterResponseInterceptor } from "../../interceptors/aclFilterResponse.interceptor";
-import { UserCreateInput } from "./UserCreateInput";
-import { UserWhereInput } from "./UserWhereInput";
-import { UserWhereUniqueInput } from "./UserWhereUniqueInput";
-import { UserFindManyArgs } from "./UserFindManyArgs";
-import { UserUpdateInput } from "./UserUpdateInput";
-import { User } from "./User";
+import { GameCreateInput } from "./GameCreateInput";
+import { GameWhereInput } from "./GameWhereInput";
+import { GameWhereUniqueInput } from "./GameWhereUniqueInput";
+import { GameFindManyArgs } from "./GameFindManyArgs";
+import { GameUpdateInput } from "./GameUpdateInput";
+import { Game } from "./Game";
+import { UserFindManyArgs } from "../../user/base/UserFindManyArgs";
+import { User } from "../../user/base/User";
+import { UserWhereUniqueInput } from "../../user/base/UserWhereUniqueInput";
 @swagger.ApiBearerAuth()
 @common.UseGuards(defaultAuthGuard.DefaultAuthGuard, nestAccessControl.ACGuard)
-export class UserControllerBase {
+export class GameControllerBase {
   constructor(
-    protected readonly service: UserService,
+    protected readonly service: GameService,
     protected readonly rolesBuilder: nestAccessControl.RolesBuilder
   ) {}
 
   @common.UseInterceptors(AclValidateRequestInterceptor)
   @nestAccessControl.UseRoles({
-    resource: "User",
+    resource: "Game",
     action: "create",
     possession: "any",
   })
   @common.Post()
-  @swagger.ApiCreatedResponse({ type: User })
+  @swagger.ApiCreatedResponse({ type: Game })
   @swagger.ApiForbiddenResponse({ type: errors.ForbiddenException })
-  async create(@common.Body() data: UserCreateInput): Promise<User> {
+  async create(@common.Body() data: GameCreateInput): Promise<Game> {
     return await this.service.create({
       data: data,
       select: {
         createdAt: true,
-        firstName: true,
+        gameType: true,
         id: true,
-        lastName: true,
-        roles: true,
+        name: true,
+        title: true,
         updatedAt: true,
-        username: true,
       },
     });
   }
 
   @common.UseInterceptors(AclFilterResponseInterceptor)
   @nestAccessControl.UseRoles({
-    resource: "User",
+    resource: "Game",
     action: "read",
     possession: "any",
   })
   @common.Get()
-  @swagger.ApiOkResponse({ type: [User] })
+  @swagger.ApiOkResponse({ type: [Game] })
   @swagger.ApiForbiddenResponse()
-  @ApiNestedQuery(UserFindManyArgs)
-  async findMany(@common.Req() request: Request): Promise<User[]> {
-    const args = plainToClass(UserFindManyArgs, request.query);
+  @ApiNestedQuery(GameFindManyArgs)
+  async findMany(@common.Req() request: Request): Promise<Game[]> {
+    const args = plainToClass(GameFindManyArgs, request.query);
     return this.service.findMany({
       ...args,
       select: {
         createdAt: true,
-        firstName: true,
+        gameType: true,
         id: true,
-        lastName: true,
-        roles: true,
+        name: true,
+        title: true,
         updatedAt: true,
-        username: true,
       },
     });
   }
 
   @common.UseInterceptors(AclFilterResponseInterceptor)
   @nestAccessControl.UseRoles({
-    resource: "User",
+    resource: "Game",
     action: "read",
     possession: "own",
   })
   @common.Get("/:id")
-  @swagger.ApiOkResponse({ type: User })
+  @swagger.ApiOkResponse({ type: Game })
   @swagger.ApiNotFoundResponse({ type: errors.NotFoundException })
   @swagger.ApiForbiddenResponse({ type: errors.ForbiddenException })
   async findOne(
-    @common.Param() params: UserWhereUniqueInput
-  ): Promise<User | null> {
+    @common.Param() params: GameWhereUniqueInput
+  ): Promise<Game | null> {
     const result = await this.service.findOne({
       where: params,
       select: {
         createdAt: true,
-        firstName: true,
+        gameType: true,
         id: true,
-        lastName: true,
-        roles: true,
+        name: true,
+        title: true,
         updatedAt: true,
-        username: true,
       },
     });
     if (result === null) {
@@ -120,30 +120,29 @@ export class UserControllerBase {
 
   @common.UseInterceptors(AclValidateRequestInterceptor)
   @nestAccessControl.UseRoles({
-    resource: "User",
+    resource: "Game",
     action: "update",
     possession: "any",
   })
   @common.Patch("/:id")
-  @swagger.ApiOkResponse({ type: User })
+  @swagger.ApiOkResponse({ type: Game })
   @swagger.ApiNotFoundResponse({ type: errors.NotFoundException })
   @swagger.ApiForbiddenResponse({ type: errors.ForbiddenException })
   async update(
-    @common.Param() params: UserWhereUniqueInput,
-    @common.Body() data: UserUpdateInput
-  ): Promise<User | null> {
+    @common.Param() params: GameWhereUniqueInput,
+    @common.Body() data: GameUpdateInput
+  ): Promise<Game | null> {
     try {
       return await this.service.update({
         where: params,
         data: data,
         select: {
           createdAt: true,
-          firstName: true,
+          gameType: true,
           id: true,
-          lastName: true,
-          roles: true,
+          name: true,
+          title: true,
           updatedAt: true,
-          username: true,
         },
       });
     } catch (error) {
@@ -157,28 +156,27 @@ export class UserControllerBase {
   }
 
   @nestAccessControl.UseRoles({
-    resource: "User",
+    resource: "Game",
     action: "delete",
     possession: "any",
   })
   @common.Delete("/:id")
-  @swagger.ApiOkResponse({ type: User })
+  @swagger.ApiOkResponse({ type: Game })
   @swagger.ApiNotFoundResponse({ type: errors.NotFoundException })
   @swagger.ApiForbiddenResponse({ type: errors.ForbiddenException })
   async delete(
-    @common.Param() params: UserWhereUniqueInput
-  ): Promise<User | null> {
+    @common.Param() params: GameWhereUniqueInput
+  ): Promise<Game | null> {
     try {
       return await this.service.delete({
         where: params,
         select: {
           createdAt: true,
-          firstName: true,
+          gameType: true,
           id: true,
-          lastName: true,
-          roles: true,
+          name: true,
+          title: true,
           updatedAt: true,
-          username: true,
         },
       });
     } catch (error) {
@@ -189,5 +187,104 @@ export class UserControllerBase {
       }
       throw error;
     }
+  }
+
+  @common.UseInterceptors(AclFilterResponseInterceptor)
+  @nestAccessControl.UseRoles({
+    resource: "User",
+    action: "read",
+    possession: "any",
+  })
+  @common.Get("/:id/users")
+  @ApiNestedQuery(UserFindManyArgs)
+  async findManyUsers(
+    @common.Req() request: Request,
+    @common.Param() params: GameWhereUniqueInput
+  ): Promise<User[]> {
+    const query = plainToClass(UserFindManyArgs, request.query);
+    const results = await this.service.findUsers(params.id, {
+      ...query,
+      select: {
+        createdAt: true,
+        firstName: true,
+        id: true,
+        lastName: true,
+        roles: true,
+        updatedAt: true,
+        username: true,
+      },
+    });
+    if (results === null) {
+      throw new errors.NotFoundException(
+        `No resource was found for ${JSON.stringify(params)}`
+      );
+    }
+    return results;
+  }
+
+  @nestAccessControl.UseRoles({
+    resource: "Game",
+    action: "update",
+    possession: "any",
+  })
+  @common.Post("/:id/users")
+  async connectUsers(
+    @common.Param() params: GameWhereUniqueInput,
+    @common.Body() body: UserWhereUniqueInput[]
+  ): Promise<void> {
+    const data = {
+      users: {
+        connect: body,
+      },
+    };
+    await this.service.update({
+      where: params,
+      data,
+      select: { id: true },
+    });
+  }
+
+  @nestAccessControl.UseRoles({
+    resource: "Game",
+    action: "update",
+    possession: "any",
+  })
+  @common.Patch("/:id/users")
+  async updateUsers(
+    @common.Param() params: GameWhereUniqueInput,
+    @common.Body() body: UserWhereUniqueInput[]
+  ): Promise<void> {
+    const data = {
+      users: {
+        set: body,
+      },
+    };
+    await this.service.update({
+      where: params,
+      data,
+      select: { id: true },
+    });
+  }
+
+  @nestAccessControl.UseRoles({
+    resource: "Game",
+    action: "update",
+    possession: "any",
+  })
+  @common.Delete("/:id/users")
+  async disconnectUsers(
+    @common.Param() params: GameWhereUniqueInput,
+    @common.Body() body: UserWhereUniqueInput[]
+  ): Promise<void> {
+    const data = {
+      users: {
+        disconnect: body,
+      },
+    };
+    await this.service.update({
+      where: params,
+      data,
+      select: { id: true },
+    });
   }
 }

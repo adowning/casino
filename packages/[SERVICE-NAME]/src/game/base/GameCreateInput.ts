@@ -11,54 +11,55 @@ https://docs.amplication.com/how-to/custom-code
   */
 import { InputType, Field } from "@nestjs/graphql";
 import { ApiProperty } from "@nestjs/swagger";
-import { StringNullableFilter } from "../../util/StringNullableFilter";
+import { EnumGameGameType } from "./EnumGameGameType";
+import { IsEnum, IsOptional, IsString, ValidateNested } from "class-validator";
+import { UserCreateNestedManyWithoutGamesInput } from "./UserCreateNestedManyWithoutGamesInput";
 import { Type } from "class-transformer";
-import { IsOptional } from "class-validator";
-import { StringFilter } from "../../util/StringFilter";
 @InputType()
-class UserWhereInput {
+class GameCreateInput {
   @ApiProperty({
     required: false,
-    type: StringNullableFilter,
+    enum: EnumGameGameType,
   })
-  @Type(() => StringNullableFilter)
+  @IsEnum(EnumGameGameType)
   @IsOptional()
-  @Field(() => StringNullableFilter, {
+  @Field(() => EnumGameGameType, {
     nullable: true,
   })
-  firstName?: StringNullableFilter;
+  gameType?: "Arcade" | "Slots" | null;
 
   @ApiProperty({
     required: false,
-    type: StringFilter,
+    type: String,
   })
-  @Type(() => StringFilter)
+  @IsString()
   @IsOptional()
-  @Field(() => StringFilter, {
+  @Field(() => String, {
     nullable: true,
   })
-  id?: StringFilter;
+  name?: string | null;
 
   @ApiProperty({
     required: false,
-    type: StringNullableFilter,
+    type: String,
   })
-  @Type(() => StringNullableFilter)
+  @IsString()
   @IsOptional()
-  @Field(() => StringNullableFilter, {
+  @Field(() => String, {
     nullable: true,
   })
-  lastName?: StringNullableFilter;
+  title?: string | null;
 
   @ApiProperty({
     required: false,
-    type: StringFilter,
+    type: () => UserCreateNestedManyWithoutGamesInput,
   })
-  @Type(() => StringFilter)
+  @ValidateNested()
+  @Type(() => UserCreateNestedManyWithoutGamesInput)
   @IsOptional()
-  @Field(() => StringFilter, {
+  @Field(() => UserCreateNestedManyWithoutGamesInput, {
     nullable: true,
   })
-  username?: StringFilter;
+  users?: UserCreateNestedManyWithoutGamesInput;
 }
-export { UserWhereInput };
+export { GameCreateInput };
